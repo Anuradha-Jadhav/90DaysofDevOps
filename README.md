@@ -5,3 +5,13 @@
 Check out my blog here: [Your Blog/GitHub Link]
 
 #Networking #DevOps #90DaysOfDevOps"
+
+
+Resources to Get Started
+
+    OSI Model Explained (GeeksforGeeks)
+    Common Networking Protocols
+    AWS Free Tier
+    DNS Basics by Cloudflare
+    Docker Networking
+
