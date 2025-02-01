@@ -9,9 +9,12 @@ Check out my blog here: [Your Blog/GitHub Link]
 
 Resources to Get Started
 
-    OSI Model Explained (GeeksforGeeks)
-    Common Networking Protocols
-    AWS Free Tier
-    DNS Basics by Cloudflare
-    Docker Networking
+    [OSI Model Explained (GeeksforGeeks)]
+   (https://www.geeksforgeeks.org/open-systems-interconnection-model-osi)
+    ##common Networking Protocols
+    https://en.wikipedia.org/wiki/Lists_of_network_protocols
+    ##DNS Basics by Cloudflare
+    https://www.cloudflare.com/learning/dns/what-is-dns/
+    ##Docker Networking
+    https://docs.docker.com/engine/network/
 
