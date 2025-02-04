@@ -1,4 +1,4 @@
-Here’s how you can structure the above process of creating a user, adding them to a group, setting a password, and granting sudo access in your `README.md` file.
+
 
 ```markdown
 ## Creating a User, Adding to a Group, Setting a Password, and Granting Sudo Access
