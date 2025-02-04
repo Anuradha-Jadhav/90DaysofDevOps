@@ -136,14 +136,118 @@ You should see:
 uid=1003(mona) gid=1004(mona) groups=1004(mona)
 ```
 
-Restrict SSH login for certain users in /etc/ssh/sshd_config
+To restrict SSH login for certain users using the `/etc/ssh/sshd_config` file, you can use the `DenyUsers` directive.
+
+### Steps to Restrict SSH Login for Specific Users
+
+1. **Edit the SSH Configuration File**:
+   To deny access for specific users via SSH, you can modify the `sshd_config` file. For example, to restrict login for `devops_user`, you would edit the file like this:
+
+   ```bash
+   sudo vi /etc/ssh/sshd_config
+   ```
+
+2. **Add the `DenyUsers` Directive**:
+   In the `sshd_config` file, add the `DenyUsers` directive followed by the username(s) you want to block from SSH access. For example:
+
+   ```bash
+   DenyUsers devops_user
+   ```
+
+   This line will deny SSH access for the user `devops_user`.
+
+3. **Reload the System Daemon**:
+   After modifying the configuration, reload the system daemon to apply changes:
+
+   ```bash
+   sudo systemctl daemon-reload
+   ```
+
+4. **Restart the SSH Service**:
+   Restart the SSH service to apply the changes:
+
+   ```bash
+   sudo systemctl restart ssh
+   ```
+
+5. **Verify the Configuration**:
+   You can verify that the `DenyUsers` directive is properly set by running:
+
+   ```bash
+   sudo cat /etc/ssh/sshd_config | grep -i deny
+   ```
+
+   This should return:
+   ```bash
+   DenyUsers devops_user
+   ```
+
+### Testing the Restriction
+
+Once you've restricted the user `devops_user` using the `DenyUsers` directive, try to log in via SSH with that user:
+
 ```bash
-ubuntu@ip-172-31-38-99:~/.ssh$ sudo cat /etc/ssh/sshd_config | grep -i  deny
-DenyUsers devops_user
-ubuntu@ip-172-31-38-99:~/.ssh$
-ubuntu@ip-172-31-38-99:~/.ssh$ sudo systemctl daemon-reload
-ubuntu@ip-172-31-38-99:~/.ssh$ sudo systemctl restart ssh
+ssh devops_user@your_server_ip
 ```
+
+You should receive a "Permission denied" error message.
+
+### Explanation for `README.md`
+
+Here’s the explanation you can add to your `README.md` for restricting SSH access:
+
+```markdown
+## Restricting SSH Login for Specific Users
+
+To deny SSH login for specific users, follow these steps:
+
+1. **Edit the SSH Configuration**:
+   Open the SSH configuration file:
+
+   ```bash
+   sudo nano /etc/ssh/sshd_config
+   ```
+
+2. **Add the `DenyUsers` Directive**:
+   Add the following line to deny SSH access for a specific user (e.g., `devops_user`):
+
+   ```bash
+   DenyUsers devops_user
+   ```
+
+3. **Reload System Daemon and Restart SSH**:
+   After saving the file, reload the system daemon and restart the SSH service:
+
+   ```bash
+   sudo systemctl daemon-reload
+   sudo systemctl restart ssh
+   ```
+
+4. **Verify the Restriction**:
+   Ensure the `DenyUsers` directive has been applied by checking the configuration:
+
+   ```bash
+   sudo cat /etc/ssh/sshd_config | grep -i deny
+   ```
+
+   You should see the restricted user listed, for example:
+
+   ```bash
+   DenyUsers devops_user
+   ```
+
+### Testing
+
+To test, try logging in as the restricted user via SSH:
+
+```bash
+ssh devops_user@your_server_ip
+```
+
+You should receive a "Permission denied" message.
+```
+
+This provides a comprehensive guide for restricting SSH login for specific users. Let me know if you need any further details!
 ### Summary
 
 1. Created a user `devops_user`.
@@ -153,4 +257,3 @@ ubuntu@ip-172-31-38-99:~/.ssh$ sudo systemctl restart ssh
 5. Verified the ability to use sudo to add new users.
 ```
 
-This step-by-step guide will help you document the process for adding a user, assigning them to a group, setting a password, and granting them sudo access in a `README.md`. Let me know if you need further details!
