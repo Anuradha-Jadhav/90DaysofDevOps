@@ -136,6 +136,14 @@ You should see:
 uid=1003(mona) gid=1004(mona) groups=1004(mona)
 ```
 
+Restrict SSH login for certain users in /etc/ssh/sshd_config
+```bash
+ubuntu@ip-172-31-38-99:~/.ssh$ sudo cat /etc/ssh/sshd_config | grep -i  deny
+DenyUsers devops_user
+ubuntu@ip-172-31-38-99:~/.ssh$
+ubuntu@ip-172-31-38-99:~/.ssh$ sudo systemctl daemon-reload
+ubuntu@ip-172-31-38-99:~/.ssh$ sudo systemctl restart ssh
+```
 ### Summary
 
 1. Created a user `devops_user`.
