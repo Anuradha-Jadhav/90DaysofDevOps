@@ -1,7 +1,8 @@
 
 
-```markdown
-## Creating a User, Adding to a Group, Setting a Password, and Granting Sudo Access
+
+
+### Creating a User, Adding to a Group, Setting a Password, and Granting Sudo Access
 
 ### Step 1: Create a New User `devops_user`
 
