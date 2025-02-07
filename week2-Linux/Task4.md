@@ -74,12 +74,24 @@ mount | grep devops_data
    ```bash
    sudo blkid /dev/xvdbu
    ubuntu@ip-172-31-33-137:~$ sudo blkid /dev/xvdbu
-/dev/xvdbu: UUID="6169c8d7-1a7b-443e-9ab2-8f7905b76963" BLOCK_SIZE="4096" TYPE="ext4"
+   /dev/xvdbu: UUID="6169c8d7-1a7b-443e-9ab2-8f7905b76963" BLOCK_SIZE="4096" TYPE="ext4"
    ```
 2. Add this line to `/etc/fstab`:
+
    ```bash
-   echo 'UUID=6169c8d7-1a7b-443e-9ab2-8f7905b76963 /mnt/devops_data ext4 defaults,nofail 0 2' | sudo tee -a /etc/fstab
+      echo 'UUID=6169c8d7-1a7b-443e-9ab2-8f7905b76963 /mnt/devops_data ext4 defaults,nofail 0 2' | sudo tee -a /etc/fstab
    ```
+### Explanation of Each Field:
+    1. UUID=abcd-1234-efgh-5678 → Identifies the volume uniquely (Replace with actual UUID from blkid).
+    2. /mnt/devops_data → Mount point.
+    3. ext4 → Filesystem type.
+    4. defaults → Standard mount options:
+    5. Read/write, allow execution, enable synchronous access, etc.
+    6. nofail → Prevents boot failure if the device is missing.
+    7. 0 → Dump backup option (usually 0 to disable).
+    8. 2 → Filesystem check order (1 for root filesystem, 2 for others).
+   
+
 3. Test the fstab entry:
    ```bash
    sudo mount -a
