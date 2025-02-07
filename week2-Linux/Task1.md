@@ -5,9 +5,9 @@
 
 ### Step 1: Create a New User `devops_user`
 
-Create the user `devops_user` using the `useradd` command:
+Create the user `devops_user` using the `useradd` command -m to assign home directory and -s for default shell:
 ```bash
-sudo useradd devops_user
+sudo useradd -m -s /bin/bash devops_user  
 ```
 
 Verify the user has been created:
@@ -71,9 +71,12 @@ sudo passwd devops_user
 
 You will be prompted to enter a new password for the user.
 
-### Step 4: Grant `devops_user` Sudo Access
-
-Edit the sudoers file to grant `devops_user` sudo privileges:
+### Step 4: Grant `devops_user` Sudo Access Not recommended
+**1) Adding User in sudo group
+  ```bash
+   sudo usermod -aG sudo devops_user
+```
+**2) Edit the sudoers file to grant `devops_user` sudo privileges:
 ```bash
 sudo vim /etc/sudoers
 ```
@@ -137,6 +140,85 @@ uid=1003(mona) gid=1004(mona) groups=1004(mona)
 ```
 
 To restrict SSH login for certain users using the `/etc/ssh/sshd_config` file, you can use the `DenyUsers` directive.
+### Steps to  SSH Login on Remote server or using different user in same machine
+
+1.** switch to user you want take ssh from
+```
+ubuntu@ip-172-31-33-137:~$ su devops_user
+Password:
+devops_user@ip-172-31-33-137:~$ mkdir  -p .ssh
+devops_user@ip-172-31-33-137:~$ touch .ssh/authorized_keys
+devops_user@ip-172-31-33-137:~$ pwd
+/home/devops_user
+devops_user@ip-172-31-33-137:~$
+```
+
+On Remote server take public key and copy public key on ssh client (the user you want to take ssh from)
+```
+ubuntu@ip-172-31-33-137:~/.ssh$ cat id_rsa.pub
+
+ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDTlx+TVPKMwS/Gs7LNPFuvE683XEwrunw2uT1KpTiyPbq2vRZLPBUB+7EPaAEbTECVtxtXskdQOF4cx4EgY5UhWoyKJRbqAgyHPaHVD/Gf/8OpbpH3ZPJVHxRPOYOB9XfgC6fKiUglKwPC02x9VUljM0N2nviBKSUlbssYhjVR6r+b1XpamHg+aHWpa/9jOm7vAW/5JdupNWRSzlw7bWTqAY3yFVPND2taSpOxSChrVUFNvQzHgzRKSqB9rJ9yZkb9qrT/7N0vGX472Gebr/qcOf0wbQ4I5yVoX1pApxkFD035MamTxq8DhCXUuH8ii420IEx0Ncfm7tZe+DtGlOTzcCyRMd19gEI7oGUWrbZElAwqijsZIQ5JbgBOjtN2UwfAO2C0N7Vd8rXRGQ6KiAfMFn0/MTCMnc5ZRWwgpRU3EPy0EuBBUBpkffsvh8fnpE7GFMyWemQ3rzPO0jqvG6ca4VTN1n6MB14R+5sI0D0eP0UVb3tUUhXJeAEJw/GfPgU= ubuntu@ip-172-31-33-137
+```
+```
+ubuntu@ip-172-31-33-137:~/.ssh$ su devops_user
+Password:
+devops_user@ip-172-31-33-137:/home/ubuntu/.ssh$ vi /home/devops_user/.ssh/authorized_keys
+devops_user@ip-172-31-33-137:/home/ubuntu/.ssh$ cat /home/devops_user/.ssh/authorized_keys
+ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDTlx+TVPKMwS/Gs7LNPFuvE683XEwrunw2uT1KpTiyPbq2vRZLPBUB+7EPaAEbTECVtxtXskdQOF4cx4EgY5UhWoyKJRbqAgyHPaHVD/Gf/8OpbpH3ZPJVHxRPOYOB9XfgC6fKiUglKwPC02x9VUljM0N2nviBKSUlbssYhjVR6r+b1XpamHg+aHWpa/9jOm7vAW/5JdupNWRSzlw7bWTqAY3yFVPND2taSpOxSChrVUFNvQzHgzRKSqB9rJ9yZkb9qrT/7N0vGX472Gebr/qcOf0wbQ4I5yVoX1pApxkFD035MamTxq8DhCXUuH8ii420IEx0Ncfm7tZe+DtGlOTzcCyRMd19gEI7oGUWrbZElAwqijsZIQ5JbgBOjtN2UwfAO2C0N7Vd8rXRGQ6KiAfMFn0/MTCMnc5ZRWwgpRU3EPy0EuBBUBpkffsvh8fnpE7GFMyWemQ3rzPO0jqvG6ca4VTN1n6MB14R+5sI0D0eP0UVb3tUUhXJeAEJw/GfPgU= ubuntu@ip-172-31-33-137
+
+devops_user@ip-172-31-33-137:/home/ubuntu/.ssh$
+```
+
+##### Take ssh of devops_user from ubuntu user on same server by using ssh command and pass the private key and public key is already copied in .ssh/authorized_keys
+```
+devops_user@ip-172-31-33-137:/home/ubuntu/.ssh$ exit
+exit
+ubuntu@ip-172-31-33-137:~/.ssh$ cd
+ubuntu@ip-172-31-33-137:~$ ssh -i .ssh/id_rsa  devops_user@localhost
+The authenticity of host 'localhost (127.0.0.1)' can't be established.
+ED25519 key fingerprint is SHA256:0ty6dL4Lgzu2egMKho99TJaiTmhj8xfC5bvDPgF/v4A.
+This host key is known by the following other names/addresses:
+    ~/.ssh/known_hosts:2: [hashed name]
+Are you sure you want to continue connecting (yes/no/[fingerprint])? yes
+Warning: Permanently added 'localhost' (ED25519) to the list of known hosts.
+Welcome to Ubuntu 24.04.1 LTS (GNU/Linux 6.8.0-1021-aws x86_64)
+
+ * Documentation:  https://help.ubuntu.com
+ * Management:     https://landscape.canonical.com
+ * Support:        https://ubuntu.com/pro
+
+ System information as of Fri Feb  7 04:46:46 UTC 2025
+
+  System load:  0.16              Processes:             113
+  Usage of /:   26.7% of 6.71GB   Users logged in:       1
+  Memory usage: 22%               IPv4 address for enX0: 172.31.33.137
+  Swap usage:   0%
+
+
+Expanded Security Maintenance for Applications is not enabled.
+
+0 updates can be applied immediately.
+
+Enable ESM Apps to receive additional future security updates.
+See https://ubuntu.com/esm or run: sudo pro status
+
+
+The list of available updates is more than a week old.
+To check for new updates run: sudo apt update
+
+
+The programs included with the Ubuntu system are free software;
+the exact distribution terms for each program are described in the
+individual files in /usr/share/doc/*/copyright.
+
+Ubuntu comes with ABSOLUTELY NO WARRANTY, to the extent permitted by
+applicable law.
+
+devops_user@ip-172-31-33-137:~$
+
+```
+### U should copy Public key on Remote Server you want access it using SSH and send private key while taking access with ssh command(Public key is like LOCK and your private key is KEY to you LOCK to get thorugh SSH)====================
+
 
 ### Steps to Restrict SSH Login for Specific Users
 
@@ -205,7 +287,7 @@ To deny SSH login for specific users, follow these steps:
    Open the SSH configuration file:
 
    ```bash
-   sudo nano /etc/ssh/sshd_config
+   sudo vi /etc/ssh/sshd_config
    ```
 
 2. **Add the `DenyUsers` Directive**:
